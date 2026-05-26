@@ -41,17 +41,17 @@ Es el **primer punto de interacción** para cualquier usuario que necesite inter
 - [ ] Al crearse la cuenta, se le asigna automáticamente el rol `PARTICIPANTE`.
 - [ ] El registro exitoso crea el registro en la tabla compartida `Usuario` y devuelve un código 201.
 
-### IAM-HU-02 — Inicio de sesión y generación de token
+### IAM-HU-02 — Inicio de sesión y generación de token (ACTUALIZADA - OWASP)
 
 **Como** usuario registrado,
 **quiero** iniciar sesión con mi email y contraseña,
-**para que** el sistema me identifique y me permita operar según mi rol.
+**para que** el sistema me identifique y me permita operar según mi rol de forma segura.
 
 **Criterios de aceptación:**
-
-- [ ] Si las credenciales son correctas, el sistema devuelve un JWT firmado.
-- [ ] Si la contraseña o el email son incorrectos, devuelve un error 400 genérico ("Credenciales inválidas") para no exponer qué dato falló.
-- [ ] El token generado incluye el `usuarioId` y la lista de roles del usuario en su payload.
+- [ ] Si las credenciales son correctas, el sistema devuelve un JWT firmado con un tiempo de vida (TTL) corto (máximo 1 hora).
+- [ ] **[OWASP A07]** Si las credenciales son incorrectas, el sistema devuelve un error 400 genérico ("Credenciales inválidas") asegurando que los tiempos de respuesta no revelen si el usuario existe o no.
+- [ ] **[OWASP A07]** El endpoint `POST /api/auth/login` debe tener configurado un Rate Limiter estricto (ej. bloqueo de IP por 15 minutos tras 5 intentos fallidos) para evitar ataques de fuerza bruta.
+- [ ] El token generado incluye el `usuarioId` y la lista de roles del usuario en su payload, siendo almacenado preferentemente en una cookie HttpOnly.
 
 ### IAM-HU-03 — Asignación de rol Disertante
 
