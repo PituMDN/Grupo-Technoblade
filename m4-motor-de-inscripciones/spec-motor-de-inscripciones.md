@@ -24,16 +24,16 @@ Es el puente entre el Catálogo de Eventos (M2) y la Logística/Acreditación (M
 
 ## 2. Historias de Usuario y Criterios de Aceptación
 
-### INS-HU-01 — Inscripción autónoma del participante
+### INS-HU-01 — Inscripción autónoma del participante (ACTUALIZADA - OWASP)
 **Como** usuario autenticado en el rol de Participante,
 **quiero** inscribirme a un evento académico publicado,
-**para que** mi lugar quede reservado y pueda asistir.
+**para que** mi lugar quede reservado de forma consistente y garantizada.
 
 **Criterios de aceptación:**
 - [ ] El sistema debe validar que el evento esté en estado `PUBLICADO`.
-- [ ] El sistema debe impedir la inscripción si el evento ha superado su `cupoMaximo`.
 - [ ] Un usuario no puede inscribirse dos veces al mismo evento.
-- [ ] Al finalizar, la inscripción queda en estado `CONFIRMADA` (si es de registro directo) o `PENDIENTE` (si requiere aprobación manual).
+- [ ] **[OWASP A04]** El sistema debe implementar un bloqueo a nivel transaccional en la base de datos durante el alta de la inscripción para evitar *Race Conditions*, garantizando que bajo ninguna circunstancia se exceda el `cupoMaximo`.
+- [ ] **[OWASP A08]** El endpoint no debe confiar en parámetros de estado enviados por el cliente (ej. ignorar un campo `estado: CONFIRMADA` enviado en el body); el estado inicial de la inscripción debe forzarse siempre desde la capa de servicio del backend.
 
 ### INS-HU-02 — Inscripción manual por el organizador
 **Como** Organizador,
