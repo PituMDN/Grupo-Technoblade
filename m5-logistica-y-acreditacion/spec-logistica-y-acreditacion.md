@@ -29,17 +29,18 @@ El M5 actúa como un puente operativo el día del evento.
 
 ## 2. Historias de Usuario y Criterios de Aceptación
 
-### ACRE-HU-01 — Acreditación manual de un participante
-**Como** organizador en la puerta del evento,
-**quiero** buscar a un participante por su email, nombre o DNI y marcarlo como presente,
-**para que** su asistencia quede registrada oficialmente.
+### ACRE-HU-01 — Acreditación manual de un participante (ACTUALIZADA - OWASP)
+
+**Como** organizador asignado a la puerta del evento,
+**quiero** buscar a un participante y marcarlo como presente,
+**para que** su asistencia quede registrada oficialmente sin manipulación externa.
 
 **Criterios de aceptación:**
 - [ ] La interfaz debe mostrar una barra de búsqueda rápida y una lista de inscriptos (obtenida del M4).
 - [ ] Al hacer clic en "Acreditar", el sistema debe registrar la hora exacta de ingreso.
-- [ ] Si el participante ya estaba acreditado, la interfaz debe mostrar un aviso visual ("Ya acreditado") y bloquear el botón.
-- [ ] Solo los participantes con estado de inscripción `CONFIRMADA` (según M4) pueden ser acreditados.
-- [ ] Al concretarse la acreditación, el sistema debe disparar asincrónicamente el evento `EVT-01` hacia el M7.
+- [ ] Si el participante ya estaba acreditado, la interfaz debe mostrar un aviso visual y bloquear el botón.
+- [ ] **[OWASP A01]** El backend debe validar mediante un middleware de control de acceso que el usuario que ejecuta el request (extraído del JWT) posee el rol de `ORGANIZADOR` y está explícitamente vinculado a ese `eventoId` en la tabla `EventoOrganizador`. Se prohíbe el acceso a organizadores globales o no asignados al evento en cuestión.
+
 
 ### ACRE-HU-02 — Monitor de aforo en tiempo real
 **Como** organizador,
