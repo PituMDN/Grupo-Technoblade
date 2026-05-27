@@ -46,15 +46,17 @@ Este módulo es dependiente de las acciones que ocurren en los módulos M5 (Log�
 - [ ] El endpoint de webhook `POST /api/certificacion/generar/asistencia` recibe la notificación (EVT-01) e inicia el proceso asíncrono o en lote de generación de PDF.
 - [ ] El sistema valida con M5 (`GET /api/acreditacion/evento/:eventoId/asistentes`) que el usuario realmente esté acreditado antes de guardar el certificado definitivo.
 
-### CERT-HU-03 — Descarga del certificado por el Participante
+### CERT-HU-03 — Descarga del certificado por el Participante (ACTUALIZADA - OWASP)
+
 **Como** participante,
 **quiero** acceder a mi perfil y descargar el certificado de un evento finalizado al que asistí,
-**para que** pueda presentarlo en mi currículum o institución.
+**para que** pueda presentarlo sin que terceros no autorizados accedan a mi documento.
 
 **Criterios de aceptación:**
 - [ ] Veo un botón de "Descargar Certificado" en los detalles de mis eventos finalizados.
 - [ ] Al hacer clic, se descarga un archivo PDF uniendo la plantilla del evento y mis datos personales.
-- [ ] Si no cumplo los requisitos (ej. no acreditado), la interfaz me bloquea la acción y la API responde con error `422`.
+- [ ] **[OWASP A01 - IDOR]** El endpoint de descarga (`GET /api/certificacion/descargar/:codigoVerificacion`) debe validar obligatoriamente que el `usuarioId` del registro del certificado coincide exactamente con el `usuarioId` extraído del JWT del token de sesión actual.
+- [ ] **[OWASP A01]** Si un usuario intenta descargar un certificado que no le pertenece, el sistema debe responder con HTTP 403 (Forbidden) y auditar el intento de acceso no autorizado.
 
 ---
 
