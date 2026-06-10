@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # Servicio de la Base de Datos
+  db:
+    image: postgres:15-alpine
+    container_name: eventos_db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpassword
+      POSTGRES_DB: eventos_academicos
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Servicio de la Aplicación Node.js
+  api:
+    build: .
+    container_name: eventos_api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      # URL de conexión para Prisma/PostgreSQL
+      - DATABASE_URL=postgresql://admin:adminpassword@db:5432/eventos_academicos?schema=public
+      - PORT=3000
+    depends_on:
+      - db
+    # Volumen para reflejar los cambios de código en tiempo real (Hot Reloading)
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+# Declarar el volumen persistente para que no se borren los datos de la BD al apagar el contenedor
+volumes:
+  postgres_data:
